@@ -2,14 +2,9 @@
   <section>
     <Header />
     <b-container>
-      <b-card title="Welcome" class="mb-3">
-        <p>This is example web application mini blog.</p>
-        <router-link to="/login">
-          <b-button variant="primary" class="btn-block mb-2">Login</b-button>
-        </router-link>
-        <router-link to="/signup">
-          <b-button variant="success" class="btn-block">Signup</b-button>
-        </router-link>
+      <b-card class="mb-3"
+              :title="user.name"
+      >
       </b-card>
       <Post v-for="post in posts" :post="post"
             :key="post.id"
@@ -21,10 +16,10 @@
 <script lang="ts">
 import * as axiosBase from '~/plugins/axios';
 import Header from '~/components/Header.vue';
-import Post from '~/components/Post.vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import Post from '~/components/Post.vue';
 
 const axios = axiosBase.getInstance();
 
@@ -38,17 +33,17 @@ export default {
   },
   data() {
     return {
-      email: '',
-      password: '',
       error: '',
       isLoading: false,
+      user: {},
       posts: []
     };
   },
   methods: {},
-  async asyncData() {
-    const res = await axios.get('/posts');
-    return { posts: res.data.data };
+  async asyncData({ params }) {
+    const userRes = await axios.get(`/users/${params.id}`);
+    const postsRes = await axios.get(`/posts`);
+    return { user: userRes.data.data, posts: postsRes.data.data };
   }
 };
 </script>
