@@ -2,35 +2,23 @@
   <section>
     <Header />
     <b-container>
-      <b-card title="Login">
-        <b-alert v-if="error"
-                 variant="danger"
-                 show
-        >
-          {{ error }}
-        </b-alert>
-        <b-form-group>
-          <label>Email</label>
-          <b-input v-model="email" />
-        </b-form-group>
-        <b-form-group>
-          <label>Password</label>
-          <b-input v-model="password"
-                   type="password"
-          />
-        </b-form-group>
-        <b-button variant="primary"
-                  class="mr-2"
-                  @click="login"
-        >
-          <font-awesome-icon v-if="isLoading"
-                             icon="spinner"
-                             spin
-          />
-          <span v-else>Login</span>
-        </b-button>
-        <router-link to="/signup">Signup?</router-link>
+      <b-card title="Welcome" class="mb-3">
+        <p>This is example web application mini blog.</p>
+        <router-link to="/login">
+          <b-button variant="primary" class="btn-block mb-2">Login</b-button>
+        </router-link>
+        <router-link to="/signup">
+          <b-button variant="success" class="btn-block">Signup</b-button>
+        </router-link>
       </b-card>
+      <div v-for="post in posts" :key="post.id">
+        <b-card class="mb-2">
+          <p>
+            <router-link :to="`/user/${post.user_id}`">{{ post.user_name }}</router-link>
+          </p>
+          {{ post.content }}
+        </b-card>
+      </div>
     </b-container>
   </section>
 </template>
@@ -39,13 +27,12 @@
 import * as axiosBase from '~/plugins/axios';
 import Header from '~/components/Header.vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faSpinner, faCircleNotch } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const axios = axiosBase.getInstance();
 
 library.add(faSpinner);
-library.add(faCircleNotch);
 
 export default {
   components: {
@@ -57,26 +44,14 @@ export default {
       email: '',
       password: '',
       error: '',
-      isLoading: false
+      isLoading: false,
+      posts: []
     };
   },
-  methods: {
-    login: async function() {
-      this.isLoading = true;
-      const res: any = await axios
-        .post('/auth/login', {
-          email: this.email,
-          password: this.password
-        })
-        .catch(error => {
-          this.error = error.response.data.error;
-          console.log(this.error);
-        });
-      this.isLoading = false;
-      localStorage.setItem('jwt', res.data.access_token);
-      this.$router.push('/tasks');
-    }
-  },
-  async asyncData() {}
+  methods: {},
+  async asyncData() {
+    const res = await axios.get('/posts');
+    return { posts: res.data.data };
+  }
 };
 </script>
