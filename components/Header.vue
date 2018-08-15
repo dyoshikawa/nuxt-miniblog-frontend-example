@@ -2,7 +2,7 @@
   <section>
     <b-jumbotron class="jumbotron-custom" bg-variant="info" text-variant="white">
       <b-container>
-        <h1>Task List</h1>
+        <h1>Mini Blog</h1>
       </b-container>
     </b-jumbotron>
   </section>

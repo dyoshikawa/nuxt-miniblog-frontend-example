@@ -76,7 +76,7 @@ export default {
       //   headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}` }
       // });
       localStorage.removeItem('jwt');
-      this.$router.push('/');
+      this.$router.push('/login');
     },
     createTask: async function() {
       await axios
@@ -120,7 +120,7 @@ export default {
     }
   },
   async created() {
-    const res: any = await getTasks().catch(err => this.$router.push('/'));
+    const res: any = await getTasks().catch(err => this.$router.push('/login'));
     this.tasks = res.data.data;
   }
 };
