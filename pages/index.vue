@@ -11,6 +11,16 @@
           <b-button variant="success" class="btn-block">Signup</b-button>
         </router-link>
       </b-card>
+
+      <div class="pagination">
+        <b-pagination size="md"
+                      :total-rows="meta.total"
+                      v-model="currentPage"
+                      :per-page="meta.per_page"
+                      @change="changePosts"
+        />
+      </div>
+
       <Post v-for="post in posts" :post="post"
             :key="post.id"
       />
@@ -42,13 +52,29 @@ export default {
       password: '',
       error: '',
       isLoading: false,
-      posts: []
+      posts: [],
+      currentPage: 1,
+      meta: 0
     };
   },
-  methods: {},
+  methods: {
+    async changePosts(event) {
+      const res: any = await axios.get(`/posts?page=${event}`).catch(err => {
+        this.error = err.response.data.message;
+      });
+      this.posts = res.data.data;
+    }
+  },
   async asyncData() {
     const res = await axios.get('/posts');
-    return { posts: res.data.data };
+    return { posts: res.data.data, meta: res.data.meta };
   }
 };
 </script>
+
+<style scoped>
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+</style>

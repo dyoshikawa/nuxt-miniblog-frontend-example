@@ -13,15 +13,19 @@
         />
       </b-card>
 
+      <div class="pagination">
+        <b-pagination size="md"
+                      :total-rows="meta.total"
+                      v-model="currentPage"
+                      :per-page="meta.per_page"
+                      @change="changePosts"
+        />
+      </div>
+
       <Post v-for="post in posts"
             :post="post"
             :key="post.id"
       />
-
-      <div class="allows">
-        <allow-button direction="left" />
-        <allow-button direction="right" />
-      </div>
     </b-container>
   </section>
 </template>
@@ -41,8 +45,7 @@ export default {
     Header,
     Post,
     FollowButton,
-    UnfollowButton,
-    AllowButton
+    UnfollowButton
   },
   data() {
     return {
@@ -50,36 +53,49 @@ export default {
       isLoadingFollow: false,
       isLoadingUnfollow: false,
       user: {},
-      posts: []
+      posts: [],
+      meta: {},
+      currentPage: 1
     };
   },
   methods: {
-    follow: async function() {
+    async follow() {
       this.isLoadingFollow = true;
       await axios.post(`/follow/${this.user.id}`).catch(err => {
         this.error = err.response.data.error;
       });
       this.isLoadingFollow = false;
     },
-    unfollow: async function() {
+    async unfollow() {
       this.isLoadingUnfollow = true;
       await axios.post(`/follow/${this.user.id}`).catch(err => {
         this.error = err.response.data.error;
       });
       this.isLoadingUnfollow = false;
+    },
+    async changePosts(event) {
+      console.log(event);
+      const res: any = await axios.get(`/posts?page=${event}`).catch(err => {
+        this.error = err.response.data.message;
+      });
+      this.posts = res.data.data;
     }
   },
   async asyncData({ params }) {
     const userRes = await axios.get(`/users/${params.id}`);
     const postsRes = await axios.get(`/posts`);
-    return { user: userRes.data.data, posts: postsRes.data.data };
+    return {
+      user: userRes.data.data,
+      posts: postsRes.data.data,
+      meta: postsRes.data.meta
+    };
   }
 };
 </script>
 
 <style scoped>
-.allows {
+.pagination {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 </style>
