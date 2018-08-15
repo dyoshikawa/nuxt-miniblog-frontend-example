@@ -23,7 +23,11 @@
                   class="mr-2"
                   @click="login"
         >
-          Login
+          <font-awesome-icon v-if="isLoading"
+                             icon="spinner"
+                             spin
+          />
+          <span v-else>Login</span>
         </b-button>
         <router-link to="/signup">Signup?</router-link>
       </b-card>
@@ -34,22 +38,31 @@
 <script lang="ts">
 import * as axiosBase from '~/plugins/axios';
 import Header from '~/components/Header.vue';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faSpinner, faCircleNotch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const axios = axiosBase.getInstance();
 
+library.add(faSpinner);
+library.add(faCircleNotch);
+
 export default {
   components: {
-    Header
+    Header,
+    FontAwesomeIcon
   },
   data() {
     return {
       email: '',
       password: '',
-      error: ''
+      error: '',
+      isLoading: false
     };
   },
   methods: {
     login: async function() {
+      this.isLoading = true;
       const res: any = await axios
         .post('/auth/login', {
           email: this.email,
@@ -59,6 +72,7 @@ export default {
           this.error = error.response.data.error;
           console.log(this.error);
         });
+      this.isLoading = false;
       localStorage.setItem('jwt', res.data.access_token);
       this.$router.push('/tasks');
     }
