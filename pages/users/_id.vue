@@ -2,13 +2,26 @@
   <section>
     <Header />
     <b-container>
-      <b-card class="mb-3"
-              :title="user.name"
+      <b-card :title="user.name"
+              class="mb-3"
       >
+        <follow-button :is-loading="isLoadingFollow"
+                       :follow="follow"
+        />
+        <unfollow-button :is-loading="isLoadingUnfollow"
+                         :unfollow="unfollow"
+        />
       </b-card>
-      <Post v-for="post in posts" :post="post"
+
+      <Post v-for="post in posts"
+            :post="post"
             :key="post.id"
       />
+
+      <div class="allows">
+        <allow-button direction="left" />
+        <allow-button direction="right" />
+      </div>
     </b-container>
   </section>
 </template>
@@ -16,30 +29,46 @@
 <script lang="ts">
 import * as axiosBase from '~/plugins/axios';
 import Header from '~/components/Header.vue';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Post from '~/components/Post.vue';
+import FollowButton from '~/components/FollowButton.vue';
+import UnfollowButton from '~/components/UnfollowButton.vue';
+import AllowButton from '~/components/AllowButton.vue';
 
 const axios = axiosBase.getInstance();
-
-library.add(faSpinner);
 
 export default {
   components: {
     Header,
-    FontAwesomeIcon,
-    Post
+    Post,
+    FollowButton,
+    UnfollowButton,
+    AllowButton
   },
   data() {
     return {
       error: '',
-      isLoading: false,
+      isLoadingFollow: false,
+      isLoadingUnfollow: false,
       user: {},
       posts: []
     };
   },
-  methods: {},
+  methods: {
+    follow: async function() {
+      this.isLoadingFollow = true;
+      await axios.post(`/follow/${this.user.id}`).catch(err => {
+        this.error = err.response.data.error;
+      });
+      this.isLoadingFollow = false;
+    },
+    unfollow: async function() {
+      this.isLoadingUnfollow = true;
+      await axios.post(`/follow/${this.user.id}`).catch(err => {
+        this.error = err.response.data.error;
+      });
+      this.isLoadingUnfollow = false;
+    }
+  },
   async asyncData({ params }) {
     const userRes = await axios.get(`/users/${params.id}`);
     const postsRes = await axios.get(`/posts`);
@@ -47,3 +76,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.allows {
+  display: flex;
+  justify-content: space-between;
+}
+</style>
