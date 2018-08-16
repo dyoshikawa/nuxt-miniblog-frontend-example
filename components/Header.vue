@@ -3,7 +3,7 @@
     <b-navbar toggleable="md" type="dark" variant="secondary">
       <b-container>
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-        <b-navbar-brand href="/">Mini Blog</b-navbar-brand>
+        <b-navbar-brand href="/">Dashboard</b-navbar-brand>
         <b-collapse is-nav id="nav_collapse">
           <b-navbar-nav>  
             <b-nav-item href="/timeline">
@@ -21,7 +21,7 @@
               <template slot="button-content">
                 <em>User</em>
               </template>
-              <b-dropdown-item href="#">Mypage</b-dropdown-item>
+              <b-dropdown-item href="/mypage">Mypage</b-dropdown-item>
               <b-dropdown-item href="#">Logout</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>

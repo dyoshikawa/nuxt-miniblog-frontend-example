@@ -61,6 +61,15 @@ export default {
   async asyncData() {
     const res = await axios.get('/posts');
     return { posts: res.data.data, meta: res.data.meta };
+  },
+  async created() {
+    await axios
+      .post('/auth/me', null, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}` }
+      })
+      .catch(error => {
+        this.$router.push('/');
+      });
   }
 };
 </script>

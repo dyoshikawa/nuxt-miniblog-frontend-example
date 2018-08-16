@@ -73,8 +73,9 @@ export default {
           console.log(this.error);
         });
       this.isLoading = false;
+      console.log(res.data.access_token);
       localStorage.setItem('jwt', res.data.access_token);
-      this.$router.push('/mypage');
+      this.$router.push('/timeline');
     }
   },
   async asyncData() {}

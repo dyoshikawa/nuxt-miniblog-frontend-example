@@ -72,7 +72,7 @@ export default {
           console.log(this.errors);
         });
       localStorage.setItem('jwt', res.data.access_token);
-      this.$router.push('/mypage');
+      this.$router.push('/timeline');
     }
   }
 };
