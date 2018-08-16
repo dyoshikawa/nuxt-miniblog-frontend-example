@@ -82,7 +82,11 @@ export default {
           console.log(error);
         });
       this.content = '';
-      const res = await axios.get('/posts');
+      const res = await axios.get('/following/posts', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('jwt')}`
+        }
+      });
       this.currentPage = 1;
       this.posts = res.data.data;
     }
@@ -95,7 +99,12 @@ export default {
       .catch(error => {
         this.$router.push('/');
       });
-    const res = await axios.get('/posts');
+
+    const res = await axios.get('/following/posts', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('jwt')}`
+      }
+    });
     this.posts = res.data.data;
     this.meta = res.data.meta;
   }
