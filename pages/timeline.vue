@@ -2,7 +2,15 @@
   <section>
     <Header />
     <b-container>
-      <b-card title="Hello, this is your page." class="mb-3">
+      <b-card title="Create Your Post" class="mb-3">
+        <b-form-group>
+          <b-textarea v-model="content" />
+        </b-form-group>
+        <b-button variant="primary"
+                  @click="createPost"
+        >
+          Post
+        </b-button>
       </b-card>
 
       <div class="pagination">
@@ -47,7 +55,8 @@ export default {
       isLoading: false,
       posts: [],
       currentPage: 1,
-      meta: 0
+      meta: {},
+      content: ''
     };
   },
   methods: {
@@ -55,6 +64,23 @@ export default {
       const res: any = await axios.get(`/posts?page=${event}`).catch(err => {
         this.error = err.response.data.message;
       });
+      this.posts = res.data.data;
+    },
+    async createPost() {
+      await axios
+        .post(
+          `/posts`,
+          { content: this.content },
+          {
+            headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}` }
+          }
+        )
+        .catch(error => {
+          console.log(error);
+        });
+      this.content = '';
+      const res = await axios.get('/posts');
+      this.currentPage = 1;
       this.posts = res.data.data;
     }
   },
