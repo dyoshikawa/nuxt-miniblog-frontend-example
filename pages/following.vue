@@ -91,6 +91,9 @@ export default {
       this.posts = res.data.data;
     }
   },
+  async asyncData() {
+    await axios.get('/posts');
+  },
   async created() {
     await axios
       .post('/auth/me', null, {

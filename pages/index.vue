@@ -66,8 +66,19 @@ export default {
     }
   },
   async asyncData() {
-    const res = await axios.get('/posts');
-    return { posts: res.data.data, meta: res.data.meta };
+    await axios.get('/posts');
+  },
+  async created() {
+    await axios
+      .post('/auth/me', null, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}` }
+      })
+      .catch(async error => {
+        const res = await axios.get('/posts');
+        this.posts = res.data.data;
+        this.meta = res.data.meta;
+      });
+    this.$router.push('/timeline');
   }
 };
 </script>
