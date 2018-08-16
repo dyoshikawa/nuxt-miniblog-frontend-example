@@ -3,11 +3,13 @@
     <Header />
     <b-container>
       <b-card title="Signup">
-        <b-alert v-if="error"
+        <b-alert v-if="errors.length !== 0"
                  variant="danger"
                  show
         >
-          {{ error }}
+          <ul>
+            <li v-for="error in errors" :key="error">{{ error[0] }}</li>
+          </ul>
         </b-alert>
         <b-form-group>
           <label>Name</label>
@@ -53,7 +55,7 @@ export default {
       email: '',
       password: '',
       passwordConfirmation: '',
-      error: ''
+      errors: []
     };
   },
   methods: {
@@ -66,12 +68,18 @@ export default {
           password_confirmation: this.passwordConfirmation
         })
         .catch(error => {
-          this.error = error.response.data.message;
+          this.errors = error.response.data.errors;
+          console.log(this.errors);
         });
       localStorage.setItem('jwt', res.data.access_token);
-      this.$router.push('/tasks');
+      this.$router.push('/mypage');
     }
-  },
-  async asyncData() {}
+  }
 };
 </script>
+
+<style scoped>
+ul {
+  margin: 0;
+}
+</style>

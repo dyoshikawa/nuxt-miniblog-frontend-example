@@ -74,7 +74,7 @@ export default {
         });
       this.isLoading = false;
       localStorage.setItem('jwt', res.data.access_token);
-      this.$router.push('/tasks');
+      this.$router.push('/mypage');
     }
   },
   async asyncData() {}

@@ -74,7 +74,6 @@ export default {
       this.isLoadingUnfollow = false;
     },
     async changePosts(event) {
-      console.log(event);
       const res: any = await axios.get(`/posts?page=${event}`).catch(err => {
         this.error = err.response.data.message;
       });
