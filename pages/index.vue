@@ -69,16 +69,18 @@ export default {
     await axios.get('/posts');
   },
   async created() {
-    await axios
+    axios
       .post('/auth/me', null, {
         headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}` }
+      })
+      .then(() => {
+        this.$router.push('/timeline');
       })
       .catch(async error => {
         const res = await axios.get('/posts');
         this.posts = res.data.data;
         this.meta = res.data.meta;
       });
-    this.$router.push('/timeline');
   }
 };
 </script>

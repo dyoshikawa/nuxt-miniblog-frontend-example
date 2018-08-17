@@ -1,5 +1,5 @@
 {
   "projects": {
-    "default": "nuxt-tasklist-frontend-example"
+    "default": "nuxt-miniblog-frontend-example"
   }
 }
